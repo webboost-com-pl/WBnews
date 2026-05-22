@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WBnews — Nowoczesny portal informacyjny</title>
+  <meta name="description" content="Nowoczesny portal informacyjny NOVA.MEDIA — wiadomości, biznes, technologia, lokalne, lifestyle, AI i sport." />
+  <style>
+    :root{
+      --bg:#ffffff;
+      --soft:#f6f8fb;
+      --soft2:#eef4ff;
+      --text:#101114;
+      --muted:#6f7785;
+      --line:#e7ebf1;
+      --blue:#2563eb;
+      --blue2:#0f52ff;
+      --dark:#0c1118;
+      --radius:14px;
+      --shadow:0 18px 50px rgba(15,23,42,.08);
+      --shadow2:0 8px 24px rgba(15,23,42,.08);
+      --container:1240px;
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{
+      font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      line-height:1.45;
+      overflow-x:hidden;
+    }
+    a{color:inherit;text-decoration:none}
+    img{display:block;width:100%;height:100%;object-fit:cover}
+    button,input{font:inherit}
+
+    .container{width:min(var(--container), calc(100% - 56px));margin-inline:auto}
+
+    .topbar{
+      height:72px;
+      display:flex;
+      align-items:center;
+      border-bottom:1px solid var(--line);
+      background:rgba(255,255,255,.86);
+      backdrop-filter:blur(18px);
+      position:sticky;
+      top:0;
+      z-index:50;
+    }
+    .nav{display:flex;align-items:center;justify-content:space-between;gap:26px}
+    .logo{font-weight:800;font-size:24px;letter-spacing:.02em;white-space:nowrap}
+    .logo span{font-weight:900}
+    .menu{display:flex;align-items:center;gap:34px;font-size:14px;font-weight:650;color:#1f2937}
+    .menu a{position:relative;padding:8px 0}
+    .menu a:after{content:"";position:absolute;left:0;bottom:1px;width:0;height:2px;background:var(--blue);transition:.25s}
+    .menu a:hover:after{width:100%}
+    .searchBtn,.hamb{width:38px;height:38px;border:0;background:transparent;border-radius:50%;display:grid;place-items:center;cursor:pointer;transition:.25s}
+    .searchBtn:hover,.hamb:hover{background:#f1f5f9}
+    .hamb{display:none}
+
+    .mobilePanel{display:none;border-bottom:1px solid var(--line);background:#fff;padding:16px 28px;position:sticky;top:72px;z-index:40}
+    .mobilePanel.open{display:block;animation:drop .26s ease both}
+    .mobilePanel a{display:block;padding:13px 0;border-bottom:1px solid #f1f3f6;font-weight:700}
+    @keyframes drop{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+
+    .hero{padding:34px 0 38px}
+    .heroGrid{display:grid;grid-template-columns:1.08fr .92fr;gap:42px;align-items:center}
+    .heroImage{height:455px;border-radius:10px;overflow:hidden;position:relative;box-shadow:var(--shadow2);background:#dbeafe}
+    .badgeLive{position:absolute;left:22px;bottom:18px;background:var(--blue);color:#fff;font-weight:800;font-size:13px;padding:9px 14px;border-radius:6px;letter-spacing:.03em}
+    .heroText{padding:20px 0 20px 0}
+    .cat{font-size:12px;color:var(--blue);text-transform:uppercase;font-weight:900;letter-spacing:.06em;margin-bottom:16px}
+    .hero h1{font-size:52px;line-height:1.08;letter-spacing:-.055em;max-width:610px;margin-bottom:22px}
+    .lead{font-size:17px;color:#4b5563;max-width:550px;margin-bottom:27px}
+    .meta{display:flex;align-items:center;gap:20px;color:#6b7280;font-size:13px;margin-bottom:28px}
+    .meta span{display:flex;align-items:center;gap:7px}
+    .btn{border:0;background:#101114;color:#fff;padding:14px 22px;border-radius:4px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:13px;transition:.25s;box-shadow:0 10px 22px rgba(0,0,0,.16)}
+    .btn:hover{transform:translateY(-2px);box-shadow:0 16px 30px rgba(0,0,0,.2)}
+
+    .sectionTop{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;gap:20px}
+    .sectionTitle{font-size:24px;font-weight:850;letter-spacing:-.03em}
+    .seeAll{font-size:13px;font-weight:800;color:var(--blue)}
+
+    .trending{padding:4px 0 38px;border-bottom:1px solid var(--line)}
+    .trendGrid{display:grid;grid-template-columns:repeat(5,1fr);gap:20px}
+    .trendCard{cursor:pointer;transition:.25s}
+    .trendCard:hover{transform:translateY(-4px)}
+    .trendImg{height:140px;border-radius:9px;overflow:hidden;background:#eef2ff;margin-bottom:13px;box-shadow:0 8px 20px rgba(15,23,42,.08)}
+    .trendCard h3{font-size:15px;line-height:1.3;margin:5px 0 7px;letter-spacing:-.015em}
+    .time{font-size:12px;color:#87909d}
+
+    .mainNews{padding:36px 0 44px}
+    .contentGrid{display:grid;grid-template-columns:minmax(0,1fr) 350px;gap:34px;align-items:start}
+    .newsGrid{display:grid;grid-template-columns:1.1fr .9fr;gap:22px}
+    .bigCard,.smallCard{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff;box-shadow:0 8px 25px rgba(15,23,42,.035);cursor:pointer;transition:.25s}
+    .bigCard:hover,.smallCard:hover{transform:translateY(-4px);box-shadow:var(--shadow2)}
+    .bigImg{height:270px;background:#eef2ff}
+    .cardBody{padding:20px 22px 18px}
+    .bigCard h2{font-size:25px;line-height:1.22;letter-spacing:-.035em;margin-bottom:10px}
+    .desc{font-size:14px;color:#5f6875;margin-bottom:15px}
+    .stack{display:grid;gap:22px}
+    .smallImg{height:130px;background:#eef2ff}
+    .smallCard h3{font-size:17px;line-height:1.28;letter-spacing:-.02em;margin-bottom:12px}
+    .bottomCards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:22px}
+    .miniImg{height:120px;background:#eef2ff}
+
+    .popular{border-left:1px solid var(--line);padding-left:28px;position:sticky;top:96px}
+    .popular h2{font-size:23px;margin-bottom:18px;letter-spacing:-.03em}
+    .popularItem{display:grid;grid-template-columns:52px 1fr;gap:15px;border-bottom:1px solid var(--line);padding:16px 0}
+    .num{font-size:29px;color:#9aa3b0;font-weight:350;letter-spacing:-.04em}
+    .popularItem h3{font-size:14px;line-height:1.35;margin-bottom:6px}
+
+  .adBox{
+  margin:4px 0 45px;
+  background:linear-gradient(105deg,#f7fbff,#f1f6ff 60%,#fff);
+  border:1px solid #e5eefc;
+  border-radius:14px;
+  padding:32px;
+  display:grid;
+  grid-template-columns:340px 1fr;
+  gap:42px;
+  align-items:center;
+  max-width:1100px;
+  margin-inline:auto;
+}
+    .adImg{height:185px;border-radius:9px;overflow:hidden;background:#dbeafe}
+    .adBox h2{font-size:25px;line-height:1.2;margin:8px 0 10px;letter-spacing:-.03em}
+    .outlineBtn{display:inline-flex;margin-top:16px;border:1px solid var(--blue);color:var(--blue);padding:11px 18px;border-radius:4px;font-weight:850;font-size:14px;transition:.25s}
+    .outlineBtn:hover{background:var(--blue);color:#fff}
+   .checks{
+  display:grid;
+  gap:14px;
+  color:#4b5563;
+  font-size:14px;
+  margin-top:22px;
+}
+    .checks span{display:flex;gap:10px;align-items:center}
+    .check{width:18px;height:18px;border:1.5px solid var(--blue);border-radius:50%;display:grid;place-items:center;color:var(--blue);font-size:11px;font-weight:900;flex:0 0 auto}
+
+    .columns{display:grid;grid-template-columns:repeat(5,1fr);gap:20px;padding-bottom:50px}
+    .col h2{font-size:19px;margin-bottom:14px;letter-spacing:-.02em;display:flex;align-items:center;justify-content:space-between;gap:8px}
+    .col h2 a{font-size:11px;color:var(--blue);font-weight:850}
+    .feature{border:1px solid var(--line);border-radius:9px;overflow:hidden;margin-bottom:13px;cursor:pointer;transition:.25s;background:#fff}
+    .feature:hover{transform:translateY(-3px);box-shadow:var(--shadow2)}
+    .featureImg{height:120px;background:#eef2ff}
+    .feature h3{font-size:14px;line-height:1.3;padding:12px 12px 4px}
+    .feature .time{padding:0 12px 12px;display:block}
+    .tiny{display:grid;grid-template-columns:56px 1fr;gap:10px;margin:13px 0;align-items:center;cursor:pointer}
+    .tinyImg{width:56px;height:45px;border-radius:7px;overflow:hidden;background:#eef2ff}
+    .tiny h4{font-size:12px;line-height:1.25;margin-bottom:2px}
+
+    .footer{background:radial-gradient(circle at 20% 0%,#1b2b40 0,#0c1118 38%,#070b10 100%);color:#dbe3ee;padding:42px 0 28px}
+    .footerGrid{display:grid;grid-template-columns:1.35fr .7fr .8fr 1.45fr;gap:56px}
+    .footer .logo{font-size:19px;color:#fff;margin-bottom:18px}
+    .footer p,.footer a{color:#a9b5c4;font-size:13px}
+    .socials{display:flex;gap:16px;margin-top:24px;color:#fff}
+    .footTitle{font-size:14px;color:#fff;font-weight:850;margin-bottom:16px}
+    .footLinks{display:grid;gap:9px}
+    .latest{display:grid;grid-template-columns:70px 1fr;gap:12px;margin-bottom:14px;align-items:center}
+    .latestImg{height:54px;border-radius:7px;overflow:hidden;background:#1e293b}
+    .copy{border-top:1px solid rgba(255,255,255,.08);margin-top:30px;padding-top:18px;color:#8794a5;font-size:12px}
+
+    .reveal{opacity:0;transform:translateY(18px);transition:opacity .65s ease, transform .65s ease}
+    .reveal.visible{opacity:1;transform:none}
+
+    .searchOverlay{position:fixed;inset:0;background:rgba(8,13,20,.42);backdrop-filter:blur(10px);z-index:100;display:none;align-items:flex-start;justify-content:center;padding-top:110px}
+    .searchOverlay.open{display:flex;animation:fade .2s ease both}
+    @keyframes fade{from{opacity:0}to{opacity:1}}
+    .searchModal{width:min(680px,calc(100% - 36px));background:#fff;border-radius:18px;padding:22px;box-shadow:0 30px 80px rgba(0,0,0,.26)}
+    .searchModal input{width:100%;border:1px solid var(--line);border-radius:12px;padding:17px 18px;font-size:16px;outline:none}
+    .searchModal input:focus{border-color:var(--blue);box-shadow:0 0 0 4px rgba(37,99,235,.1)}
+    .searchHint{font-size:13px;color:#6b7280;margin-top:12px}
+
+    @media (max-width:1100px){
+      .heroGrid{grid-template-columns:1fr;gap:24px}.heroImage{height:420px}.hero h1{font-size:44px}
+      .trendGrid{grid-template-columns:repeat(3,1fr)}
+      .contentGrid{grid-template-columns:1fr}.popular{position:static;border-left:0;padding-left:0}.adBox{grid-template-columns:1fr 1fr}.checks{grid-column:1/-1}.columns{grid-template-columns:repeat(3,1fr)}
+    }
+    @media (max-width:760px){
+      .container{width:min(100% - 32px, var(--container))}.topbar{height:66px}.menu,.searchBtn{display:none}.hamb{display:grid}.mobilePanel{top:66px}
+      .hero{padding-top:20px}.heroGrid{gap:20px}.heroImage{height:285px;border-radius:12px}.heroText{padding:0}.hero h1{font-size:35px;line-height:1.07}.lead{font-size:15px}.meta{flex-wrap:wrap;margin-bottom:22px}.btn{width:100%;justify-content:center;border-radius:9px}
+      .sectionTop{margin-bottom:14px}.sectionTitle{font-size:21px}.trendGrid{display:flex;overflow:auto;gap:14px;padding-bottom:8px;scroll-snap-type:x mandatory}.trendCard{min-width:235px;scroll-snap-align:start}.trendImg{height:132px}
+      .mainNews{padding-top:28px}.newsGrid,.bottomCards{grid-template-columns:1fr}.bigImg{height:205px}.smallImg,.miniImg{height:150px}.bigCard h2{font-size:23px}.popularItem{grid-template-columns:44px 1fr}
+      .adBox{grid-template-columns:1fr;padding:18px;gap:18px}.adImg{height:190px}.adBox h2{font-size:22px}
+      .columns{grid-template-columns:1fr;padding-bottom:34px}.featureImg{height:155px}.footerGrid{grid-template-columns:1fr;gap:28px}.footer{padding-top:34px}
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container nav">
+      <a class="logo" href="index.html" aria-label="NOVA.MEDIA">WBnews</a>
+      <nav class="menu" aria-label="Główna nawigacja">
+        <a href="#wiadomosci">Wiadomości</a><a href="#biznes">Biznes</a><a href="#technologia">Technologia</a><a href="#lokalne">Lokalne</a><a href="#lifestyle">Lifestyle</a><a href="#ai">AI</a><a href="#sport">Sport</a>
+      </nav>
+      <button class="searchBtn" aria-label="Szukaj" data-search>⌕</button>
+      <button class="hamb" aria-label="Menu" data-menu>☰</button>
+    </div>
+  </header>
+  <div class="mobilePanel" data-mobile>
+    <a href="#wiadomosci">Wiadomości</a><a href="#biznes">Biznes</a><a href="#technologia">Technologia</a><a href="#lokalne">Lokalne</a><a href="#lifestyle">Lifestyle</a><a href="#ai">AI</a><a href="#sport">Sport</a>
+  </div>
+
+  <main>
+<section class="hero container reveal">
+  <div class="heroGrid">
+
+    <a class="heroImage" href="artykuly/prognozy-polska-2026.html">
+      <img src="prognozy-polska-2026.jpg" alt="Warszawa biznes" />
+      <span class="badgeLive">NAJWAŻNIEJSZE</span>
+    </a>
+
+    <article class="heroText">
+
+      <div class="cat">Gospodarka</div>
+
+      <h1>
+        Komisja Europejska pokazuje nowe prognozy dla Polski.
+        Gospodarka ma dalej rosnąć
+      </h1>
+
+      <p class="lead">
+        Według najnowszych prognoz Polska utrzymuje stabilny wzrost gospodarczy,
+        mimo spowolnienia w części Europy i rosnących kosztów finansowania.
+      </p>
+
+      <div class="meta">
+        <span>◷ 4 min czytania</span>
+        <span>•</span>
+        <span>22 maja 2026</span>
+      </div>
+
+      <a class="btn" href="artykuly/prognozy-polska-2026.html">
+        Czytaj analizę <span>→</span>
+      </a>
+
+    </article>
+  </div>
+</section>
+
+    <section class="trending container reveal" id="wiadomosci">
+      <div class="sectionTop"><h2 class="sectionTitle">Trending teraz</h2><a class="seeAll" href="kategoria.html?sekcja=trending">Zobacz wszystkie</a></div>
+      <div class="trendGrid">
+        <a class="trendCard" href="artykul.html?id=microsoft-centrum-chmurowe"><div class="trendImg"><img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=650&q=82" alt="Budynek technologiczny"></div><div class="cat">Technologia</div><h3>Microsoft inwestuje 2 mld zł w polskie centrum chmurowe</h3><p class="time">2 godz. temu</p></a>
+        <a class="trendCard" href="artykul.html?id=nowy-model-ai-google"><div class="trendImg"><img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=650&q=82" alt="AI"></div><div class="cat">AI</div><h3>Nowy model AI od Google zmienia zasady gry</h3><p class="time">3 godz. temu</p></a>
+        <a class="trendCard" href="artykul.html?id=krakow-ruch"><div class="trendImg"><img src="https://images.unsplash.com/photo-1519197924294-4ba991a11128?auto=format&fit=crop&w=650&q=82" alt="Miasto"></div><div class="cat">Lokalne</div><h3>Kraków wprowadza inteligentne systemy zarządzania ruchem</h3><p class="time">4 godz. temu</p></a>
+        <a class="trendCard" href="artykul.html?id=inflacja-spada"><div class="trendImg"><img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=650&q=82" alt="Wykresy"></div><div class="cat">Biznes</div><h3>Inflacja w Polsce spada szybciej niż przewidywano</h3><p class="time">5 godz. temu</p></a>
+        <a class="trendCard" href="artykul.html?id=slow-life-miasto"><div class="trendImg"><img src="https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=650&q=82" alt="Kawiarnia"></div><div class="cat">Lifestyle</div><h3>Slow life w mieście — nowy trend, który pokochali Polacy</h3><p class="time">6 godz. temu</p></a>
+      </div>
+    </section>
+
+    <section class="mainNews container reveal">
+      <div class="contentGrid">
+        <div>
+          <div class="sectionTop"><h2 class="sectionTitle">Najważniejsze wiadomości</h2></div>
+          <div class="newsGrid">
+            <a class="bigCard" href="artykul.html?id=polska-firma-drony"><div class="bigImg"><img src="https://images.unsplash.com/photo-1508444845599-5c89863b1c44?auto=format&fit=crop&w=1000&q=82" alt="Dron"></div><div class="cardBody"><div class="cat">Technologia</div><h2>Polska firma tworzy drony nowej generacji dla Europy</h2><p class="desc">Startup z Wrocławia podpisał kontrakt na dostawę bezzałogowych systemów dla sektora publicznego.</p><p class="time">◷ 4 min czytania · 12 maja 2026</p></div></a>
+            <div class="stack">
+              <a class="smallCard" href="artykul.html?id=ai-edukacja"><div class="smallImg"><img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=700&q=82" alt="Technologia edukacyjna"></div><div class="cardBody"><div class="cat">AI</div><h3>Sztuczna inteligencja w edukacji — rewolucja, która już się dzieje</h3><p class="time">◷ 3 min czytania</p></div></a>
+              <a class="smallCard" href="artykul.html?id=firmy-rynki-zagraniczne"><div class="smallImg"><img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=700&q=82" alt="Spotkanie biznesowe"></div><div class="cardBody"><div class="cat">Biznes</div><h3>Polskie firmy coraz śmielej wchodzą na rynki zagraniczne</h3><p class="time">◷ 4 min czytania</p></div></a>
+            </div>
+          </div>
+          <div class="bottomCards">
+            <a class="smallCard" href="artykul.html?id=gdansk-zielone-dzielnice"><div class="miniImg"><img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=650&q=82" alt="Zielone miasto"></div><div class="cardBody"><div class="cat">Lokalne</div><h3>Gdańsk rozwija zielone dzielnice przyszłości</h3><p class="time">◷ 3 min czytania</p></div></a>
+            <a class="smallCard" href="artykul.html?id=cyberbezpieczenstwo"><div class="miniImg"><img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=650&q=82" alt="Cyberbezpieczeństwo"></div><div class="cardBody"><div class="cat">Technologia</div><h3>Cyberbezpieczeństwo firm — największe zagrożenia 2026</h3><p class="time">◷ 4 min czytania</p></div></a>
+            <a class="smallCard" href="artykul.html?id=zdrowe-zycie-miasto"><div class="miniImg"><img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=650&q=82" alt="Lifestyle"></div><div class="cardBody"><div class="cat">Lifestyle</div><h3>5 sposobów na bardziej zrównoważone życie w mieście</h3><p class="time">◷ 2 min czytania</p></div></a>
+          </div>
+        </div>
+        <aside class="popular">
+          <h2>Popularne dzisiaj</h2>
+          <a class="popularItem" href="artykul.html?id=zloty-euro"><div class="num">01</div><div><h3>Polski złoty umacnia się wobec euro — co to oznacza?</h3><p class="time">12 maja 2026</p></div></a>
+          <a class="popularItem" href="artykul.html?id=weekend-polska"><div class="num">02</div><div><h3>Najlepsze miejsca na weekend w Polsce — ranking 2026</h3><p class="time">12 maja 2026</p></div></a>
+          <a class="popularItem" href="artykul.html?id=iphone17"><div class="num">03</div><div><h3>iPhone 17 — wszystko, co wiemy do tej pory</h3><p class="time">12 maja 2026</p></div></a>
+          <a class="popularItem" href="artykul.html?id=work-life-balance"><div class="num">04</div><div><h3>Dlaczego work-life balance to klucz do sukcesu?</h3><p class="time">12 maja 2026</p></div></a>
+          <a class="popularItem" href="artykul.html?id=warszawa-europa"><div class="num">05</div><div><h3>Warszawa wśród najlepszych miast do życia w Europie</h3><p class="time">12 maja 2026</p></div></a>
+        </aside>
+      </div>
+    </section>
+
+
+    <section class="columns container reveal">
+      <div class="col" id="technologia"><h2>Technologia <a href="kategoria.html?cat=technologia">Zobacz wszystkie</a></h2><a class="feature" href="artykul.html?id=internet-2030"><div class="featureImg"><img src="https://images.unsplash.com/photo-1518709268805-4e9042af2176?auto=format&fit=crop&w=600&q=82" alt="Internet"></div><h3>Przyszłość internetu: co nas czeka w 2030 roku?</h3><p class="time">3 min czytania</p></a><a class="tiny" href="artykul.html?id=polskie-ai"><div class="tinyImg"><img src="https://images.unsplash.com/photo-1674027444485-cec3da58eef4?auto=format&fit=crop&w=220&q=80" alt="AI"></div><div><h4>Nowe laby AI od polskich inżynierów</h4><p class="time">2 min</p></div></a><a class="tiny" href="artykul.html?id=dane-chmura"><div class="tinyImg"><img src="https://images.unsplash.com/photo-1639322537228-f710d846310a?auto=format&fit=crop&w=220&q=80" alt="Chmura"></div><div><h4>Jak chronić swoje dane w cyfrowym świecie</h4><p class="time">3 min</p></div></a></div>
+      <div class="col" id="ai"><h2>AI <a href="kategoria.html?cat=ai">Zobacz wszystkie</a></h2><a class="feature" href="artykul.html?id=ai-biznes"><div class="featureImg"><img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=600&q=82" alt="AI w biznesie"></div><h3>AI w biznesie: automatyzacja, która przynosi zyski</h3><p class="time">4 min czytania</p></a><a class="tiny" href="artykul.html?id=marketing-ai"><div class="tinyImg"><img src="https://images.unsplash.com/photo-1676299081847-824916de030a?auto=format&fit=crop&w=220&q=80" alt="AI"></div><div><h4>Najlepsze narzędzia AI dla marketingu w 2026</h4><p class="time">3 min</p></div></a><a class="tiny" href="artykul.html?id=chatgpt-programisci"><div class="tinyImg"><img src="https://images.unsplash.com/photo-1607799279861-4dd421887fb3?auto=format&fit=crop&w=220&q=80" alt="Programista"></div><div><h4>Czy sztuczna inteligencja zastąpi programistów?</h4><p class="time">4 min</p></div></a></div>
+      <div class="col"><h2>Biznes <a href="kategoria.html?cat=biznes">Zobacz wszystkie</a></h2><a class="feature" href="artykul.html?id=polskie-marki"><div class="featureImg"><img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=600&q=82" alt="Biznes"></div><h3>Polskie marki, które podbijają świat</h3><p class="time">4 min czytania</p></a><a class="tiny" href="artykul.html?id=kapital-startup"><div class="tinyImg"><img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=220&q=80" alt="Finanse"></div><div><h4>Finansowanie startupów — gdzie szukać kapitału?</h4><p class="time">3 min</p></div></a><a class="tiny" href="artykul.html?id=ecommerce"><div class="tinyImg"><img src="https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=220&q=80" alt="E-commerce"></div><div><h4>E-commerce w Polsce rośnie mocniej niż kiedykolwiek</h4><p class="time">3 min</p></div></a></div>
+      <div class="col" id="lokalne"><h2>Lokalne wiadomości <a href="kategoria.html?cat=lokalne">Wszystkie</a></h2><a class="feature" href="artykul.html?id=poznan-inwestycje"><div class="featureImg"><img src="https://images.unsplash.com/photo-1519197924294-4ba991a11128?auto=format&fit=crop&w=600&q=82" alt="Miasto"></div><h3>Nowe inwestycje w Poznaniu zmieniają miasto</h3><p class="time">3 min czytania</p></a><a class="tiny" href="artykul.html?id=lodz-kultura"><div class="tinyImg"><img src="https://images.unsplash.com/photo-1518005020951-eccb494ad742?auto=format&fit=crop&w=220&q=80" alt="Kultura"></div><div><h4>Łódź stawia na kulturę i nowoczesność</h4><p class="time">2 min</p></div></a><a class="tiny" href="artykul.html?id=wroclaw-rowery"><div class="tinyImg"><img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=220&q=80" alt="Miasto"></div><div><h4>Wrocław liderem zielonych rozwiązań w Europie</h4><p class="time">3 min</p></div></a></div>
+      <div class="col" id="lifestyle"><h2>Lifestyle <a href="kategoria.html?cat=lifestyle">Zobacz wszystkie</a></h2><a class="feature" href="artykul.html?id=minimalizm"><div class="featureImg"><img src="https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=600&q=82" alt="Lifestyle"></div><h3>Minimalizm cyfrowy — jak odzyskać czas dla siebie?</h3><p class="time">3 min czytania</p></a><a class="tiny" href="artykul.html?id=restauracje"><div class="tinyImg"><img src="https://images.unsplash.com/photo-1528605248644-14dd04022da1?auto=format&fit=crop&w=220&q=80" alt="Restauracja"></div><div><h4>Najlepsze kawiarnie w Polsce na 2026 rok</h4><p class="time">2 min</p></div></a><a class="tiny" href="artykul.html?id=zdrowe-nawyki"><div class="tinyImg"><img src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=220&q=80" alt="Zdrowie"></div><div><h4>Zdrowe nawyki, które naprawdę działają</h4><p class="time">2 min</p></div></a></div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footerGrid">
+      <div><div class="logo">NOVA.MEDIA</div><p>Nowoczesne wiadomości, technologie i lokalne historie, które mają znaczenie.</p><div class="socials"><a href="social.html?s=facebook">f</a><a href="social.html?s=x">𝕏</a><a href="social.html?s=linkedin">in</a><a href="social.html?s=instagram">◎</a><a href="social.html?s=youtube">▶</a></div></div>
+      <div><div class="footTitle">Kategorie</div><div class="footLinks"><a href="kategoria.html?cat=wiadomosci">Wiadomości</a><a href="kategoria.html?cat=biznes">Biznes</a><a href="kategoria.html?cat=technologia">Technologia</a><a href="kategoria.html?cat=lokalne">Lokalne</a><a href="kategoria.html?cat=lifestyle">Lifestyle</a><a href="kategoria.html?cat=ai">AI</a><a href="kategoria.html?cat=sport">Sport</a></div></div>
+      <div><div class="footTitle">Przydatne linki</div><div class="footLinks"><a href="o-nas.html">O nas</a><a href="reklama.html">Reklama</a><a href="polityka-prywatnosci.html">Polityka prywatności</a><a href="regulamin.html">Regulamin</a><a href="kontakt.html">Kontakt</a></div></div>
+      <div><div class="footTitle">Najnowsze wiadomości</div><a class="latest" href="artykul.html?id=polska-gospodarka"><div class="latestImg"><img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=250&q=80" alt="Finanse"></div><div><p>Polska gospodarka zaskakuje analityków</p><p class="time">12 maja 2026</p></div></a><a class="latest" href="artykul.html?id=technologie-zdrowie"><div class="latestImg"><img src="https://images.unsplash.com/photo-1559757175-0eb30cd8c063?auto=format&fit=crop&w=250&q=80" alt="Zdrowie"></div><div><p>Nowe technologie w służbie zdrowia</p><p class="time">12 maja 2026</p></div></a></div>
+    </div>
+    <div class="container copy">© 2026 NOVA.MEDIA. Wszelkie prawa zastrzeżone.</div>
+  </footer>
+
+  <div class="searchOverlay" data-overlay>
+    <div class="searchModal">
+      <input id="searchInput" type="search" placeholder="Wpisz, czego szukasz…" autocomplete="off" />
+      <p class="searchHint">Naciśnij Enter, aby przejść do wyników wyszukiwania. Kliknij poza oknem, aby zamknąć.</p>
+    </div>
+  </div>
+
+  <script>
+    const menuBtn = document.querySelector('[data-menu]');
+    const mobile = document.querySelector('[data-mobile]');
+    const searchBtn = document.querySelector('[data-search]');
+    const overlay = document.querySelector('[data-overlay]');
+    const searchInput = document.querySelector('#searchInput');
+
+    menuBtn?.addEventListener('click', () => mobile.classList.toggle('open'));
+    mobile?.querySelectorAll('a').forEach(a => a.addEventListener('click', () => mobile.classList.remove('open')));
+
+    searchBtn?.addEventListener('click', () => {
+      overlay.classList.add('open');
+      setTimeout(() => searchInput.focus(), 80);
+    });
+    overlay?.addEventListener('click', e => {
+      if(e.target === overlay) overlay.classList.remove('open');
+    });
+    document.addEventListener('keydown', e => {
+      if(e.key === 'Escape') overlay.classList.remove('open');
+    });
+    searchInput?.addEventListener('keydown', e => {
+      if(e.key === 'Enter' && searchInput.value.trim()) {
+        window.location.href = 'szukaj.html?q=' + encodeURIComponent(searchInput.value.trim());
+      }
+    });
+
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting){
+          entry.target.classList.add('visible');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+  </script>
+</body>
+</html>
